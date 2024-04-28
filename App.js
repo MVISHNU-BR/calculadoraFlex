@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { Appbar, TextInput, Button, Text } from "react-native-paper";
+import { TextInput, Button, Text } from "react-native-paper";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import Container from "./src/components/container";
+import Header from "./src/components/Header";
+import Body from "./src/components/Body";
 
 const App = () => {
   const [gas, setGas] = useState("");
   const [eta, setEta] = useState("");
-  const [res, setRes] = useState("");
   return (
     <SafeAreaProvider>
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.Content style={styles.title} title="Calculadora Flex" />
-        </Appbar.Header>
-        <View style={styles.body}>
+      <Container>
+        <Header title={"Calculadora Flex"} />
+        <Body>
           <TextInput
             style={styles.input}
             label="Preço da Gasolina"
@@ -30,17 +30,13 @@ const App = () => {
             Calcular
           </Button>
           <Text style={styles.text}>{gas}</Text>
-        </View>
-      </View>
+        </Body>
+      </Container>
     </SafeAreaProvider>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#CCC",
-  },
   body: {
     margin: 8,
   },
