@@ -1,32 +1,36 @@
 import React, { useState } from "react";
-import { TextInput, Button, Text } from "react-native-paper";
-import { StyleSheet, View } from "react-native";
+import { Button, Text } from "react-native-paper";
+import { StyleSheet, View, Alert } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Container from "./src/components/container";
 import Header from "./src/components/Header";
 import Body from "./src/components/Body";
-
+import Input from "./src/components/input";
 const App = () => {
   const [gas, setGas] = useState("");
   const [eta, setEta] = useState("");
+  const handleCalcular = () => {
+    if (!gas || gas <= 0 || !eta || eta <= 0) {
+      Alert.alert("Atenção!", "obrigatorio informar o valor e do etanol");
+    }
+  };
+
   return (
     <SafeAreaProvider>
       <Container>
         <Header title={"Calculadora Flex"} />
         <Body>
-          <TextInput
-            style={styles.input}
+          <Input
             label="Preço da Gasolina"
             value={gas}
             onChangeText={(gas) => setGas(gas)}
           />
-          <TextInput
-            style={styles.input}
+          <Input
             label="Preço do Etanol"
             value={eta}
             onChangeText={(eta) => setEta(eta)}
           />
-          <Button mode="contained" onPress={() => console.log("pass")}>
+          <Button mode="contained" onPress={handleCalcular}>
             Calcular
           </Button>
           <Text style={styles.text}>{gas}</Text>
@@ -37,13 +41,6 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  body: {
-    margin: 8,
-  },
-  input: {
-    backgroundColor: "#FFF",
-    marginBottom: 8,
-  },
   title: {
     backgroundColor: "#cc2",
     alignItems: "center",
