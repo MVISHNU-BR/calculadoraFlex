@@ -7,16 +7,15 @@ const Input = (props) => {
     <TextInput
       style={styles.input}
       keyboardType="decimal-pad"
-      label="Preço da Gasolina"
+      label='Preço da Gasolina'
       {...props}
     />
   );
 };
-
 const styles = StyleSheet.create({
   input: {
     backgroundColor: "#FFF",
-    marginBottom: 8,
+    marginBotton: 8,
   },
 });
 
