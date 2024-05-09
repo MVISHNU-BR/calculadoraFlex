@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Text } from "react-native-paper";
 import { StyleSheet, View, Alert } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Container from "./../components/container";
+import Container from "../components/Container";
 import Header from "./../components/Header";
 import Body from "./../components/Body";
 import Input from "./../components/Input";
