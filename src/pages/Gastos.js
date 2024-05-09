@@ -6,6 +6,8 @@ import Header from "../components/Header";
 import Container from "../components/container";
 import Body from "../components/Body";
 
+import { useNavigation } from '@react-navigation/native'
+
 const DATA = [
   {
     id: 1,
@@ -26,6 +28,8 @@ const DATA = [
 ];
 
 const Gastos = () => {
+
+  const navigation = useNavigation();
 
   const renderItem = ({ item }) => (
     <List.Item
