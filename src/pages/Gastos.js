@@ -3,7 +3,7 @@ import { FlatList, View, StyleSheet } from 'react-native';
 import { List, Text, FAB } from 'react-native-paper';
 
 import Header from "../components/Header";
-import Container from "../components/container";
+import Container from "../components/Container";
 import Body from "../components/Body";
 
 import { useNavigation } from '@react-navigation/native'
