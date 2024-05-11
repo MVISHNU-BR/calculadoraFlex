@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { RadioButton, TextInput, Button, Appbar } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -10,18 +10,30 @@ import Body from "../components/Body";
 import Input from "../components/Input";
 
 import { useNavigation } from '@react-navigation/native'
-const Abastecimento = () => {
+
+const Abastecimento = ({ route }) => {
 
     const navigation = useNavigation();
+    const { item } = route.params ? route.params : {};
+
     const [date, setDate] = useState(new Date())
     const [show, setShow] = useState(false);
 
-
     const [tipo, setTipo] = useState('gas');
-    const [preco, setPreco] = useState('');
-    const [valor, setValor] = useState('');
-    const [odometro, setOdometro] = useState('');
-    const [data, setData] = useState('')
+    const [preco, setPreco] = useState(null);
+    const [valor, setValor] = useState(null);
+    const [odometro, setOdometro] = useState(null);
+    const [data, setData] = useState(moment(new Date()).format('DD/MM/YYYY'))
+
+    useEffect(() => {
+        if (item) {
+            setTipo(item.tipo == 0 ? 'gas' : 'eta')
+            setData(item.data);
+            setPreco(item.preco.toFixed(2));
+            setValor(item.valor.toFixed(2));
+            setOdometro(item.odometro.toFixed(0));
+        }
+    }, [item])
 
     const handleSalvar = () => {
         console.log('salvar')
@@ -35,7 +47,9 @@ const Abastecimento = () => {
             <Header title={'Abastecimento'}
                 goBack={() => { navigation.goBack() }}>
                 <Appbar.Action icon='check' onPress={handleSalvar} />
-                <Appbar.Action icon='trash-can' onPress={handleExcluir} />
+                {item &&
+                    <Appbar.Action icon='trash-can' onPress={handleExcluir} />
+                }
             </Header>
             <Body>
                 <View style={styles.containerRadio}>
@@ -111,15 +125,15 @@ const Abastecimento = () => {
                     Salvar
                 </Button>
 
-                <Button
-                    mode='contained'
-                    style={styles.button}
-                    buttonColor={'red'}
-                    onPress={handleExcluir}>
-                    Excluir
-                </Button>
-
-
+                {item &&
+                    <Button
+                        mode='contained'
+                        style={styles.button}
+                        buttonColor={'red'}
+                        onPress={handleExcluir}>
+                        Excluir
+                    </Button>
+                }
 
             </Body>
         </Container>
