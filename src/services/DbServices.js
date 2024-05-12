@@ -1,14 +1,17 @@
 import * as SQLite from 'expo-sqlite';
 
-const Database = {
+export const Database = {
     getConnection: () => {
-        const db = SQLite.openDatabase('fuel_manager.db')
+
+        const db = SQLite.openDatabase('fuel_manager.db');
 
         db.transaction((tx) => {
-            tx.executeSql('create table if not exists gastos(id integer primary key not null, tipo int not null, data text not null, preco real not null, odometro real not null);');
+            tx.executeSql(
+                'create table if not exists gastos (id integer primary key not null autoincrement, tipo int not null, data text not null, preco real not null, valor real not null, odometro real not null);'
+            );
         });
 
-        const ExecuteQuerry = (sql, params = []) => {
+        const ExecuteQuery = (sql, params = []) =>
             new Promise((resolve, reject) => {
                 db.transaction((trans) => {
                     trans.executeSql(
@@ -24,12 +27,8 @@ const Database = {
                 });
             });
 
-            return ExecuteQuerry;
-        }
-    }
-}
-
-
+        return ExecuteQuery;
+    },
+};
 
 export default Database;
-
