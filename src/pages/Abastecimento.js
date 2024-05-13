@@ -1,33 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { RadioButton, TextInput, Button, Appbar } from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment'
 
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { RadioButton, TextInput, Button, Appbar } from "react-native-paper";
+
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from "moment";
+
+import Header from '../components/Header';
 import Container from "../components/Container";
-import Header from "../components/Header";
 import Body from "../components/Body";
+
 import Input from "../components/Input";
 
-import { useNavigation } from '@react-navigation/native'
+import { insertGasto, updateGasto, deleteGasto, } from '../services/GastosServicesDB';
+
+import { useNavigation } from '@react-navigation/native';
 
 const Abastecimento = ({ route }) => {
 
-    const navigation = useNavigation();
     const { item } = route.params ? route.params : {};
 
-    const [date, setDate] = useState(new Date())
-    const [show, setShow] = useState(false);
+    const navigation = useNavigation();
 
     const [tipo, setTipo] = useState('gas');
-    const [preco, setPreco] = useState(null);
-    const [valor, setValor] = useState(null);
-    const [odometro, setOdometro] = useState(null);
-    const [data, setData] = useState(moment(new Date()).format('DD/MM/YYYY'))
+    const [preco, setPreco] = useState('');
+    const [valor, setValor] = useState('');
+    const [odometro, setOdometro] = useState('');
+    const [data, setData] = useState((moment(new Date).format('DD/MM/YYYY')));
+
+    const [date, setDate] = useState(new Date());
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
         if (item) {
-            setTipo(item.tipo == 0 ? 'gas' : 'eta')
+            setTipo(item.tipo == 0 ? 'gas' : 'eta');
             setData(item.data);
             setPreco(item.preco.toFixed(2));
             setValor(item.valor.toFixed(2));
@@ -36,103 +42,123 @@ const Abastecimento = ({ route }) => {
     }, [item])
 
     const handleSalvar = () => {
-        console.log('salvar')
-    }
+
+        if (item) {
+
+            updateGasto({
+                tipo: tipo == 'gas' ? 0 : 1,
+                data: data,
+                preco: preco,
+                valor: valor,
+                odometro: odometro,
+                id: item.id
+            }
+            ).then();
+
+        } else {
+            insertGasto({
+                tipo: tipo == 'gas' ? 0 : 1,
+                data: data,
+                preco: preco,
+                valor: valor,
+                odometro: odometro
+            }
+            ).then();
+        }
+
+        navigation.goBack();
+    };
+
     const handleExcluir = () => {
-        console.log('excluir')
-    }
+
+        deleteGasto(item.id).then();
+        navigation.goBack();
+
+    };
 
     return (
         <Container>
-            <Header title={'Abastecimento'}
-                goBack={() => { navigation.goBack() }}>
-                <Appbar.Action icon='check' onPress={handleSalvar} />
-                {item &&
-                    <Appbar.Action icon='trash-can' onPress={handleExcluir} />
+            <Header title={'Abastecimento'} goBack={() => navigation.goBack()}>
+                <Appbar.Action icon="check" onPress={(handleSalvar)} />
+
+                {
+                    item &&
+                    <Appbar.Action icon="trash-can" onPress={(handleExcluir)} />
                 }
+
             </Header>
             <Body>
                 <View style={styles.containerRadio}>
                     <View style={styles.containerItem}>
                         <RadioButton
                             value="first"
-                            color={'red'}
                             status={tipo === 'gas' ? 'checked' : 'unchecked'}
+                            color="red"
                             onPress={() => setTipo('gas')}
                         />
                         <Text>Gasolina</Text>
                     </View>
+
                     <View style={styles.containerItem}>
                         <RadioButton
-                            value="first"
-                            color={'blue'}
+                            value="second"
                             status={tipo === 'eta' ? 'checked' : 'unchecked'}
+                            color="green"
                             onPress={() => setTipo('eta')}
                         />
-                        <Text>Etanol (Alcool)</Text>
+                        <Text>Etanol</Text>
                     </View>
                 </View>
+
                 {show && (
                     <DateTimePicker
-                        testID='dateTimePicker'
+                        testID="dateTimePicker"
                         value={date}
                         mode={'date'}
                         is24Hour={true}
-                        display='default'
                         onTouchCancel={() => setShow(false)}
                         onChange={(event, date) => {
-                            setShow(false)
+                            setShow(false);
                             setData(moment(date).format('DD/MM/YYYY'));
                         }}
                     />
                 )}
+
                 <TouchableOpacity onPress={() => setShow(true)}>
                     <Input
-                        label='Data'
-                        value={data}
-                        onChangeText={(text) => setData(text)}
-                        right={<TextInput.Icon icon="calendar" />}
                         editable={false}
+                        label="Data"
+                        value={data}
+                        left={<TextInput.Icon icon="calendar" />}
                     />
                 </TouchableOpacity>
 
                 <Input
-                    label='Preço'
+                    label="Preço"
                     value={preco}
-                    onChangeText={(text) => setPreco(text)}
-                    right={<TextInput.Icon icon="currency-brl" />}
+                    onChangeText={text => setPreco(text)}
+                    left={<TextInput.Icon icon="currency-brl" />}
                 />
 
                 <Input
-                    label='Valor'
+                    label="Valor"
                     value={valor}
-                    onChangeText={(text) => setValor(text)}
-                    right={<TextInput.Icon icon="currency-brl" />}
+                    onChangeText={text => setValor(text)}
+                    left={<TextInput.Icon icon="currency-brl" />}
                 />
 
                 <Input
-                    label='Odomêtro'
+                    label="Odômetro"
                     value={odometro}
-                    onChangeText={(text) => setOdometro(text)}
-                    right={<TextInput.Icon icon="camera-timer" />}
+                    onChangeText={text => setOdometro(text)}
+                    left={<TextInput.Icon icon="av-timer" />}
                 />
 
-                <Button
-                    mode='contained'
-                    style={styles.button}
-                    buttonColor={'purple'}
-                    onPress={handleSalvar}>
-                    Salvar
-                </Button>
+                <Button style={styles.button} buttonColor="green" mode="contained" onPress={(handleSalvar)}>Salvar</Button>
 
-                {item &&
-                    <Button
-                        mode='contained'
-                        style={styles.button}
-                        buttonColor={'red'}
-                        onPress={handleExcluir}>
-                        Excluir
-                    </Button>
+                {
+                    item &&
+                    <Button style={styles.button} buttonColor="red" mode="contained" onPress={(handleExcluir)}>Excluir</Button>
                 }
 
             </Body>
@@ -143,17 +169,15 @@ const Abastecimento = ({ route }) => {
 const styles = StyleSheet.create({
     containerRadio: {
         flexDirection: 'row',
-        margin: 8,
-        alignItems: 'center',
         justifyContent: 'space-evenly',
+        marginBottom: 20
     },
     containerItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-evenly',
     },
     button: {
-        margin: 8,
+        marginBottom: 8
     }
 });
 

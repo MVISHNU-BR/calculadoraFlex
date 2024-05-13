@@ -1,53 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from "react-native";
 import { List, Text, FAB } from 'react-native-paper';
 
-import Header from "../components/Header";
+import Header from '../components/Header';
 import Container from "../components/Container";
 import Body from "../components/Body";
 
-import { getGastos, insertGasto } from "../services/GastosServicesDB";
+import { getGastos, insertGasto } from '../services/GastosServicesDB'
 
-import { useNavigation } from '@react-navigation/native'
-
+import { useNavigation } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 const Gastos = () => {
 
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   const [gastos, setGastos] = useState([]);
 
   useEffect(() => {
 
     getGastos().then((dados) => {
-      console.log(dados)
       setGastos(dados);
-    })
-    console.log('iniciando a tela')
-  }, []);
+    });
+  }, [isFocused]);
 
   const renderItem = ({ item }) => (
     <List.Item
-      title={
-        'R$' + item.valor.toFixed(2) + ' (R$' + item.preco.toFixed(2) + ')'
-      }
-      description={item.odometro + ' km'}
-      left={(props) => (
-        <List.Icon
-          {...props}
-          color={item.tipo == 0 ? 'red' : 'green'}
-          icon="gas-station"
-        />
-      )}
-      right={(props) => (
-        <Text {...props} style={{ alignSelf: 'center' }}>
-          {' '}
-          {item.data}{' '}
-        </Text>
-      )}
+      title={"R$ " + item.valor.toFixed(2) + " (R$ " + item.preco.toFixed(2) + ")"}
+      description={item.odometro + " KM"}
+      left={props => <List.Icon {...props} color={item.tipo == 0 ? 'red' : 'green'} icon="gas-station" />}
+      right={props => <Text {...props}> {item.data} </Text>}
       onPress={() => navigation.navigate('Abastecimento', { item })}
     />
-  );
+  )
 
   return (
     <Container>
@@ -56,14 +42,14 @@ const Gastos = () => {
         <FlatList
           data={gastos}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-        />
-        <FAB
-          style={styles.fab}
-          icon="plus"
-          onPress={() => navigation.navigate('Abastecimento')}
+          keyExtractor={item => item.id}
         />
       </Body>
+      <FAB
+        icon="plus"
+        style={styles.fab}
+        onPress={() => navigation.navigate('Abastecimento')}
+      />
     </Container>
   );
 };
