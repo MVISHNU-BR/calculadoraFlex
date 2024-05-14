@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
-
-import Main from './src/Navigaions/Main';
+import UserPovider from './src/contexts/UserContexts';
+import Route from './src/Navigaions/Route';
 
 const App = () => {
 
   return (
-    <NavigationContainer>
-      <Main />
-    </NavigationContainer>
+    <UserPovider>
+      <NavigationContainer>
+        <Route />
+      </NavigationContainer>
+    </UserPovider>
   )
 
 }

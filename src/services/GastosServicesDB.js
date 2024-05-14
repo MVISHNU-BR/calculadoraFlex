@@ -9,7 +9,6 @@ export const getGastos = async () => {
 }
 
 export const insertGasto = async (param) => {
-  console.log('here')
   let results = await DB_EXEC('insert into gastos (tipo, data, preco, valor, odometro) values(?,?,?,?,?)',
     [param.tipo, param.data, param.preco, param.valor, param.odometro]);
   // console.log(results)
