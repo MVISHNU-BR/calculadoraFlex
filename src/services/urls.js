@@ -1,0 +1,1 @@
+export const Base_URL = "https://silly-mangos-wash.loca.lt/"

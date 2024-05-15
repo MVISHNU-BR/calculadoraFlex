@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import Container from '../components/Container'
 import Body from '../components/Body'
 import Input from "../components/Input";
@@ -7,11 +7,32 @@ import { Button, Headline, TextInput, } from "react-native-paper";
 import Logo from '../components/Logo'
 import { useNavigation } from "@react-navigation/native";
 
+import { register } from "../services/Auth.services";
+
 const Register = () => {
     const navigation = useNavigation();
     const [name, setName] = useState('Aleatorio souza');
-    const [email, setEmail] = useState('Aleatorio souza');
-    const [senha, setSenha] = useState('batata');
+    const [email, setEmail] = useState('Aleatorio');
+    const [password, setPassword] = useState('batata');
+
+    const handleRegister = () => {
+        register({
+            name: name,
+            email: email,
+            password: password
+        }).then(res => {
+            console.log(res)
+
+            if (res) {
+                Alert.alert('Atenção', 'usuario cadastrado com sucesso', [
+                    { text: "OK", onPress: () => navigation.goBack() }
+                ])
+
+            } else {
+                Alert.alert('Atenção', 'usuario NÂO cadastrado')
+            }
+        });
+    }
 
     return (
         <Container>
@@ -34,12 +55,12 @@ const Register = () => {
                 />
                 <Input
                     label="Senha"
-                    value={senha}
+                    value={password}
                     secureTextEntry
-                    onChangeText={(text) => setSenha(text)}
+                    onChangeText={(text) => setPassword(text)}
                     left={<TextInput.Icon name="key" />}
                 />
-                <Button style={styles.button} mode='contained' onPress={() => console.log('pressed')}>Login</Button>
+                <Button style={styles.button} mode='contained' onPress={handleRegister}>Registrar</Button>
                 <Button style={styles.button} mode='outlined' onPress={() => navigation.goBack()}>Cancelar</Button>
             </Body>
         </Container>
