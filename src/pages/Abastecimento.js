@@ -2,19 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { RadioButton, TextInput, Button, Appbar } from "react-native-paper";
-
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from "moment";
-
 import Header from '../components/Header';
 import Container from "../components/Container";
 import Body from "../components/Body";
-
 import Input from "../components/Input";
-
-import { insertGasto, updateGasto, deleteGasto, } from '../services/GastosServicesDB';
-
 import { useNavigation } from '@react-navigation/native';
+import { updateGasto, insertGasto, deleteGasto } from "../services/gastos.services";
 
 const Abastecimento = ({ route }) => {
 
@@ -35,16 +30,14 @@ const Abastecimento = ({ route }) => {
         if (item) {
             setTipo(item.tipo == 0 ? 'gas' : 'eta');
             setData(item.data);
-            setPreco(item.preco.toFixed(2));
-            setValor(item.valor.toFixed(2));
-            setOdometro(item.odometro.toFixed(0));
+            setPreco(item.preco);
+            setValor(item.valor);
+            setOdometro(item.odometro);
         }
     }, [item])
 
     const handleSalvar = () => {
-
         if (item) {
-
             updateGasto({
                 tipo: tipo == 'gas' ? 0 : 1,
                 data: data,
@@ -52,30 +45,57 @@ const Abastecimento = ({ route }) => {
                 valor: valor,
                 odometro: odometro,
                 id: item.id
-            }
-            ).then();
-
+            }).then(res => {
+                navigation.goBack()
+            });
         } else {
             insertGasto({
                 tipo: tipo == 'gas' ? 0 : 1,
                 data: data,
                 preco: preco,
                 valor: valor,
-                odometro: odometro
-            }
-            ).then();
+                odometro: odometro,
+            }).then(res => {
+                console.log(res)
+                navigation.goBack();
+            });
         }
-
-        navigation.goBack();
-    };
+    }
 
     const handleExcluir = () => {
-
-        deleteGasto(item.id).then();
-        navigation.goBack();
+        deleteGasto(item.id).then(res => {
+            navigation.goBack();
+        });
 
     };
 
+    // const handleSalvar = () => {
+
+    //     if (item) {
+
+    //         updateGasto({
+    //             tipo: tipo == 'gas' ? 0 : 1,
+    //             data: data,
+    //             preco: preco,
+    //             valor: valor,
+    //             odometro: odometro,
+    //             id: item.id
+    //         }
+    //         ).then();
+
+    //     } else {
+    //         insertGasto({
+    //             tipo: tipo == 'gas' ? 0 : 1,
+    //             data: data,
+    //             preco: preco,
+    //             valor: valor,
+    //             odometro: odometro
+    //         }
+    //         ).then();
+    //     }
+
+    //     navigation.goBack();
+    // };
     return (
         <Container>
             <Header title={'Abastecimento'} goBack={() => navigation.goBack()}>
@@ -103,7 +123,7 @@ const Abastecimento = ({ route }) => {
                         <RadioButton
                             value="second"
                             status={tipo === 'eta' ? 'checked' : 'unchecked'}
-                            color="green"
+                            color="blue"
                             onPress={() => setTipo('eta')}
                         />
                         <Text>Etanol</Text>
@@ -147,6 +167,7 @@ const Abastecimento = ({ route }) => {
                     left={<TextInput.Icon icon="currency-brl" />}
                 />
 
+
                 <Input
                     label="Odômetro"
                     value={odometro}
@@ -158,7 +179,7 @@ const Abastecimento = ({ route }) => {
 
                 {
                     item &&
-                    <Button style={styles.button} buttonColor="red" mode="contained" onPress={(handleExcluir)}>Excluir</Button>
+                    <Button style={styles.button} buttonColor="purple" mode="contained" onPress={(handleExcluir)}>Excluir</Button>
                 }
 
             </Body>
@@ -177,7 +198,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        marginBottom: 8
+        margin: 10,
     }
 });
 

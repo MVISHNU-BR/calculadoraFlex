@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import Container from '../components/Container'
 import Body from '../components/Body'
 import Input from "../components/Input";
@@ -9,12 +9,32 @@ import { useNavigation } from "@react-navigation/native";
 
 import { useUser } from "../contexts/UserContexts";
 
+import { login } from '../services/Auth.services'
 
 const Login = () => {
     const navigation = useNavigation();
-    const [email, setEmail] = useState('aleatorio@gmail.com');
-    const [senha, setSenha] = useState('batata');
-    const { setSigned } = useUser();
+    const [email, setEmail] = useState('johndoe@example.com');
+    const [password, setPassword] = useState('batata');
+    const { setSigned, setName } = useUser();
+
+    const handleLogin = () => {
+        login({
+            email: email,
+            password: password
+        }).then(res => {
+            console.log(res);
+
+            if (res && res.user) {
+                console.log(res.user.name)
+                setName(res.user.name)
+                setSigned(true)
+            } else {
+                Alert.alert("Atenção", 'Usuario ou senha invalidos!')
+            }
+        })
+
+    }
+
     return (
         <Container>
             <Body>
@@ -30,12 +50,12 @@ const Login = () => {
                 />
                 <Input
                     label="Senha"
-                    value={senha}
+                    value={password}
                     secureTextEntry
-                    onChangeText={(text) => setSenha(text)}
+                    onChangeText={(text) => setPassword(text)}
                     left={<TextInput.Icon name="key" />}
                 />
-                <Button style={styles.button} mode='contained' onPress={() => setSigned(true)}>Login</Button>
+                <Button style={styles.button} mode='contained' onPress={handleLogin}>Login</Button>
                 <Button style={styles.button} mode='outlined' onPress={() => navigation.navigate('Register')}>Registrar</Button>
             </Body>
         </Container>

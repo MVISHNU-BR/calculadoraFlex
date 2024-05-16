@@ -6,30 +6,35 @@ import Header from '../components/Header';
 import Container from "../components/Container";
 import Body from "../components/Body";
 
-import { getGastos, insertGasto } from '../services/GastosServicesDB'
+import { getGastos, insertGasto } from '../services/gastos.services'
 
 import { useNavigation } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
+import { useUser } from "../contexts/UserContexts";
 
 const Gastos = () => {
 
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 
+  const { name } = useUser();
+
   const [gastos, setGastos] = useState([]);
+
 
   useEffect(() => {
 
     getGastos().then((dados) => {
+      console.log(dados)
       setGastos(dados);
     });
   }, [isFocused]);
 
   const renderItem = ({ item }) => (
     <List.Item
-      title={"R$ " + item.valor.toFixed(2) + " (R$ " + item.preco.toFixed(2) + ")"}
+      title={"R$ " + item.valor + " (R$ " + item.preco + ")"}
       description={item.odometro + " KM"}
-      left={props => <List.Icon {...props} color={item.tipo == 0 ? 'red' : 'green'} icon="gas-station" />}
+      left={props => <List.Icon {...props} color={item.tipo == 0 ? 'red' : 'blue'} icon="gas-station" />}
       right={props => <Text {...props}> {item.data} </Text>}
       onPress={() => navigation.navigate('Abastecimento', { item })}
     />
@@ -37,7 +42,7 @@ const Gastos = () => {
 
   return (
     <Container>
-      <Header title={'Fuel Manager'} />
+      <Header title={'Olá, ' + name} />
       <Body>
         <FlatList
           data={gastos}

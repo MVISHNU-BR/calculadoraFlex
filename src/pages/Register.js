@@ -11,8 +11,8 @@ import { register } from "../services/Auth.services";
 
 const Register = () => {
     const navigation = useNavigation();
-    const [name, setName] = useState('Aleatorio souza');
-    const [email, setEmail] = useState('Aleatorio');
+    const [name, setName] = useState('John Due');
+    const [email, setEmail] = useState('johndoe@example.com');
     const [password, setPassword] = useState('batata');
 
     const handleRegister = () => {
