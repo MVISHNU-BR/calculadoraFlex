@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../contexts/UserContexts";
 
 import { login } from '../services/Auth.services'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = () => {
     const navigation = useNavigation();
@@ -22,11 +23,9 @@ const Login = () => {
             email: email,
             password: password
         }).then(res => {
-            console.log(res);
-
             if (res && res.user) {
-                console.log(res.user.name)
                 setName(res.user.name)
+                AsyncStorage.setItem('@TOKEN_KEY', res.accessToken).then()
                 setSigned(true)
             } else {
                 Alert.alert("Atenção", 'Usuario ou senha invalidos!')

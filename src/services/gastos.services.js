@@ -4,7 +4,7 @@ import { Base_URL } from "./urls"
 // GET 
 export const getGastos = async () => {
     try {
-        return await API.get(`${Base_URL}/gastos`).then(
+        return await API.get(`${Base_URL}/660/gastos`).then(
             Response => {
                 return Response.data;
             }, error => {
@@ -20,7 +20,7 @@ export const getGastos = async () => {
 //POST
 export const insertGasto = async (param) => {
     try {
-        return await API.post(`${Base_URL}/gastos`, param).then(
+        return await API.post(`${Base_URL}/660/gastos`, param).then(
             Response => {
                 return Response.data;
             }, error => {
@@ -36,7 +36,7 @@ export const insertGasto = async (param) => {
 //UPdate
 export const updateGasto = async (param) => {
     try {
-        return await API.put(`${Base_URL}/gastos/${param.id}`, param).then(
+        return await API.put(`${Base_URL}/gastos/660/${param.id}`, param).then(
             Response => {
                 return Response.data;
             }, error => {
@@ -52,7 +52,7 @@ export const updateGasto = async (param) => {
 //delete
 export const deleteGasto = async (id) => {
     try {
-        return await API.delete(`${Base_URL}/gastos/${id}`).then(
+        return await API.delete(`${Base_URL}/gastos/660/${id}`).then(
             Response => {
                 return Response.data;
             }, error => {
