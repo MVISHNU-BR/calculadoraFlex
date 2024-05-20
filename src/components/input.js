@@ -6,7 +6,6 @@ const Input = (props) => {
   return (
     <TextInput
       style={styles.input}
-      keyboardType="decimal-pad"
       label='Preço da Gasolina'
       {...props}
     />
